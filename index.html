@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#667eea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="טריוויה אנטומיה">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100' rx='20'/><text x='50' y='65' text-anchor='middle' font-size='50'>🧬</text></svg>">
+<title>🧬 טריוויה אנטומיה</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;min-height:-webkit-fill-available;direction:rtl;padding:12px;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+html{height:-webkit-fill-available}
+.container{max-width:500px;margin:0 auto;background:#fff;border-radius:20px;box-shadow:0 15px 50px rgba(0,0,0,0.3);padding:20px;min-height:calc(100vh - 24px)}
+h1{font-size:1.8em;background:linear-gradient(45deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:5px}
+.sub{text-align:center;color:#666;margin-bottom:15px;font-size:0.9em}
+.btn{background:linear-gradient(45deg,#667eea,#764ba2);color:#fff;border:none;padding:14px 20px;border-radius:12px;font-size:15px;cursor:pointer;margin:5px;width:100%;max-width:280px;font-weight:bold;touch-action:manipulation}
+.btn:active{transform:scale(0.98);opacity:0.9}
+.btn2{background:linear-gradient(45deg,#4facfe,#00f2fe)}
+.btn3{background:linear-gradient(45deg,#f093fb,#f5576c)}
+.btn4{background:linear-gradient(45deg,#11998e,#38ef7d)}
+.screen{display:none}
+.screen.active{display:block}
+.stats{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:12px;border-radius:12px;margin:12px 0;display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px;font-size:0.9em}
+.q{font-size:1.2em;font-weight:bold;text-align:center;margin:15px 0;line-height:1.4}
+.imgbox{text-align:center;margin:12px auto;background:#f5f7fa;padding:12px;border-radius:12px;border:3px solid #667eea;max-width:100%}
+.imgbox svg{max-width:100%;height:auto;max-height:220px}
+.badge{background:#f093fb;color:#fff;padding:5px 12px;border-radius:12px;display:inline-block;margin-bottom:8px;font-size:0.85em}
+.ans{display:block;width:100%;padding:14px;margin:8px 0;background:#fff;border:2px solid #ddd;border-radius:12px;cursor:pointer;font-size:15px;text-align:right;touch-action:manipulation}
+.ans:active{background:#f0f4ff}
+.ans.ok{background:#d4edda;border-color:#28a745}
+.ans.no{background:#f8d7da;border-color:#dc3545}
+.prog{background:#ddd;height:6px;border-radius:3px;margin:10px 0}
+.progbar{background:linear-gradient(45deg,#667eea,#764ba2);height:100%;border-radius:3px;transition:width 0.4s}
+.expl{background:#e3f2fd;padding:12px;border-radius:10px;margin:10px 0;border-right:4px solid #667eea;font-size:0.95em}
+.hide{display:none!important}
+.flex{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.lvlgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+.lvlcard{padding:15px 8px;border:2px solid #667eea;border-radius:12px;background:#fff;cursor:pointer;text-align:center}
+.lvlcard:active{background:#f0f4ff}
+.lvlicon{font-size:1.8em;margin-bottom:3px}
+.dict{background:#fff;border:2px solid #e3f2fd;border-radius:10px;padding:10px;margin:6px 0}
+.searchbox{width:100%;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:15px;margin:8px 0}
+.score{font-size:2.5em;font-weight:bold;color:#667eea;text-align:center;margin:12px 0}
+.install-prompt{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:15px;border-radius:12px;margin:15px 0;text-align:center}
+.install-prompt button{background:#fff;color:#667eea;border:none;padding:10px 25px;border-radius:8px;font-weight:bold;margin-top:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- מסך בית -->
+<div id="home" class="screen active">
+<h1>🧬 טריוויה אנטומיה</h1>
+<p class="sub">6 שלבים • 80+ שאלות • שאלות תמונה! 📸</p>
+
+<div id="installPrompt" class="install-prompt hide">
+📲 התקן את האפליקציה על המכשיר שלך!
+<br><button onclick="installApp()">התקן עכשיו</button>
+</div>
+
+<div class="flex" style="flex-direction:column;align-items:center">
+<button class="btn" onclick="openLevels()">🎯 בחר שלב</button>
+<button class="btn btn2" onclick="playGame('normal')">▶️ משחק רגיל</button>
+<button class="btn btn3" onclick="playGame('timed')">⏱️ משחק מתוזמן</button>
+<button class="btn" onclick="playGame('study')">📚 מצב לימוד</button>
+<button class="btn btn3" onclick="playExam()">📝 מבחן (30 שאלות)</button>
+<button class="btn" onclick="openLB()">🏆 לוח תוצאות</button>
+<button class="btn btn4" onclick="openDict()">📖 מילון מונחים</button>
+</div>
+</div>
+
+<!-- בחירת שלב -->
+<div id="levels" class="screen">
+<h2 style="text-align:center;color:#667eea;margin-bottom:12px">🎯 בחר שלב</h2>
+<div class="lvlgrid">
+<div class="lvlcard" onclick="playLevel(1)"><div class="lvlicon">🔬</div><b>שלב 1</b><br><small>התא</small></div>
+<div class="lvlcard" onclick="playLevel(2)"><div class="lvlicon">🧫</div><b>שלב 2</b><br><small>רקמות</small></div>
+<div class="lvlcard" onclick="playLevel(3)"><div class="lvlicon">🦴</div><b>שלב 3</b><br><small>עצמות</small></div>
+<div class="lvlcard" onclick="playLevel(4)"><div class="lvlicon">🔗</div><b>שלב 4</b><br><small>מפרקים</small></div>
+<div class="lvlcard" onclick="playLevel(5)"><div class="lvlicon">💪</div><b>שלב 5</b><br><small>שרירים</small></div>
+<div class="lvlcard" onclick="playLevel(6)"><div class="lvlicon">🧭</div><b>שלב 6</b><br><small>תנועות</small></div>
+</div>
+<div class="flex"><button class="btn" onclick="goHome()">🏠 חזרה</button></div>
+</div>
+
+<!-- משחק -->
+<div id="game" class="screen">
+<div class="stats">
+<span>שלב: <b id="gLvl">1</b></span>
+<span id="gTimer" class="hide" style="font-size:1.3em;color:#fee140">30</span>
+<span id="gLives">❤️❤️❤️</span>
+<span>שאלה: <span id="gNum">1</span>/10</span>
+<span>🔥 <span id="gStreak">0</span></span>
+</div>
+<div class="prog"><div class="progbar" id="gProg" style="width:10%"></div></div>
+<div id="gBadge" class="badge hide">📸 שאלת תמונה</div>
+<div class="q" id="gQ"></div>
+<div id="gImg" class="imgbox hide"></div>
+<div id="gAns"></div>
+<div id="gExpl" class="expl hide"></div>
+<div class="flex" style="margin-top:12px">
+<button class="btn" onclick="goHome()">🏠 חזרה</button>
+<button id="gNext" class="btn btn2 hide" onclick="nextQ()">הבא ←</button>
+</div>
+</div>
+
+<!-- תוצאות -->
+<div id="results" class="screen">
+<div style="text-align:center;padding:20px">
+<div style="font-size:3.5em" id="rEmoji">🎉</div>
+<h2 id="rTitle">מעולה!</h2>
+<div class="score" id="rScore">0</div>
+<div id="rInfo"></div>
+<div class="flex" style="margin-top:15px">
+<button class="btn" onclick="goHome()">🏠 חזרה</button>
+<button class="btn btn2" onclick="playGame('normal')">🔄 שחק שוב</button>
+<button id="rDetails" class="btn btn3 hide" onclick="openDetails()">📊 פירוט</button>
+</div>
+</div>
+</div>
+
+<!-- לוח תוצאות -->
+<div id="lb" class="screen">
+<h2 style="text-align:center;color:#667eea;margin-bottom:12px">🏆 לוח תוצאות</h2>
+<div id="lbList"></div>
+<div class="flex"><button class="btn" onclick="goHome()">🏠 חזרה</button></div>
+</div>
+
+<!-- מילון -->
+<div id="dict" class="screen">
+<h2 style="text-align:center;color:#667eea;margin-bottom:8px">📖 מילון מונחים</h2>
+<input type="text" class="searchbox" id="dictSearch" placeholder="🔍 חפש..." oninput="filterDict()">
+<div id="dictList" style="max-height:350px;overflow-y:auto"></div>
+<div class="flex"><button class="btn" onclick="goHome()">🏠 חזרה</button></div>
+</div>
+
+<!-- פירוט -->
+<div id="details" class="screen">
+<h2 style="text-align:center;color:#667eea;margin-bottom:8px">📊 פירוט תוצאות</h2>
+<div id="detailsList" style="max-height:350px;overflow-y:auto"></div>
+<div class="flex"><button class="btn" onclick="showScreen('results')">← חזרה</button></div>
+</div>
+
+</div>
+
+<script>
+// === PWA Install ===
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    deferredPrompt=e;
+    document.getElementById('installPrompt').classList.remove('hide');
+});
+function installApp(){
+    if(deferredPrompt){
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(r){
+            if(r.outcome==='accepted')document.getElementById('installPrompt').classList.add('hide');
+            deferredPrompt=null;
+        });
+    }
+}
+window.addEventListener('appinstalled',function(){document.getElementById('installPrompt').classList.add('hide');});
+
+// === תמונות SVG ===
+var SVG={
+cell:`<svg viewBox="0 0 400 300"><ellipse cx="200" cy="150" rx="180" ry="130" fill="#fef9e7" stroke="#d4ac0d" stroke-width="5"/><ellipse cx="150" cy="140" rx="50" ry="45" fill="#8e44ad" stroke="#5b2c6f" stroke-width="3"/><ellipse cx="150" cy="140" rx="22" ry="18" fill="#4a235a"/><text x="150" y="145" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Nucleus</text><ellipse cx="280" cy="100" rx="32" ry="14" fill="#e74c3c" stroke="#922b21" stroke-width="2" transform="rotate(-15 280 100)"/><ellipse cx="300" cy="160" rx="30" ry="13" fill="#e74c3c" stroke="#922b21" stroke-width="2"/><ellipse cx="270" cy="210" rx="28" ry="12" fill="#e74c3c" stroke="#922b21" stroke-width="2"/><text x="340" y="105" fill="#922b21" font-size="9" font-weight="bold">Mitochondria</text><circle cx="85" cy="190" r="7" fill="#3498db"/><circle cx="100" cy="210" r="7" fill="#3498db"/><circle cx="75" cy="215" r="7" fill="#3498db"/><text x="60" y="240" fill="#2471a3" font-size="9">Ribosomes</text><circle cx="320" cy="230" r="14" fill="#27ae60" stroke="#1e8449" stroke-width="2"/><text x="305" y="260" fill="#1e8449" font-size="9">Lysosome</text></svg>`,
+mito:`<svg viewBox="0 0 350 180"><ellipse cx="175" cy="90" rx="160" ry="70" fill="#e74c3c" stroke="#641e16" stroke-width="4"/><ellipse cx="175" cy="90" rx="140" ry="55" fill="#f1948a" stroke="#922b21" stroke-width="2"/><path d="M40 90Q65 40,100 90Q135 140,170 90Q205 40,240 90Q275 140,310 90" fill="none" stroke="#c0392b" stroke-width="12" stroke-linecap="round"/><text x="175" y="165" text-anchor="middle" fill="#641e16" font-size="14" font-weight="bold">Mitochondria - מייצרת ATP</text></svg>`,
+tissues:`<svg viewBox="0 0 380 280"><rect x="10" y="10" width="175" height="125" rx="12" fill="#fdebd0" stroke="#e67e22" stroke-width="3"/><text x="97" y="35" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold">Connective</text><ellipse cx="50" cy="75" rx="18" ry="12" fill="#f8c471"/><ellipse cx="100" cy="90" rx="20" ry="14" fill="#f8c471"/><ellipse cx="145" cy="70" rx="16" ry="11" fill="#f8c471"/><rect x="195" y="10" width="175" height="125" rx="12" fill="#fadbd8" stroke="#e74c3c" stroke-width="3"/><text x="282" y="35" text-anchor="middle" fill="#e74c3c" font-size="13" font-weight="bold">Epithelial</text><rect x="210" y="50" width="145" height="15" rx="3" fill="#f1948a"/><rect x="210" y="68" width="145" height="15" rx="3" fill="#ec7063"/><rect x="210" y="86" width="145" height="15" rx="3" fill="#e74c3c"/><rect x="10" y="145" width="175" height="125" rx="12" fill="#f5b7b1" stroke="#c0392b" stroke-width="3"/><text x="97" y="170" text-anchor="middle" fill="#c0392b" font-size="13" font-weight="bold">Muscle</text><rect x="25" y="190" width="145" height="18" fill="#e74c3c"/><rect x="25" y="215" width="145" height="18" fill="#e74c3c"/><rect x="195" y="145" width="175" height="125" rx="12" fill="#d5f5e3" stroke="#27ae60" stroke-width="3"/><text x="282" y="170" text-anchor="middle" fill="#27ae60" font-size="13" font-weight="bold">Nervous</text><circle cx="240" cy="220" r="20" fill="#58d68d"/><line x1="260" y1="220" x2="355" y2="220" stroke="#82e0aa" stroke-width="6"/></svg>`,
+skeleton:`<svg viewBox="0 0 180 380"><ellipse cx="90" cy="32" rx="28" ry="30" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><circle cx="78" cy="27" r="5" fill="#333"/><circle cx="102" cy="27" r="5" fill="#333"/><rect x="82" y="62" width="16" height="25" rx="3" fill="#fef9e7" stroke="#d4ac0d"/><rect x="84" y="90" width="12" height="95" rx="2" fill="#fef9e7" stroke="#d4ac0d"/><path d="M55 185Q45 210,60 235L75 242L90 245L105 242L120 235Q135 210,125 185Z" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><line x1="75" y1="242" x2="70" y2="310" stroke="#f5deb3" stroke-width="12"/><line x1="105" y1="242" x2="110" y2="310" stroke="#f5deb3" stroke-width="12"/><line x1="70" y1="315" x2="68" y2="360" stroke="#f5deb3" stroke-width="9"/><line x1="110" y1="315" x2="112" y2="360" stroke="#f5deb3" stroke-width="9"/><ellipse cx="60" cy="368" rx="16" ry="7" fill="#fef9e7" stroke="#d4ac0d"/><ellipse cx="120" cy="368" rx="16" ry="7" fill="#fef9e7" stroke="#d4ac0d"/></svg>`,
+spine:`<svg viewBox="0 0 140 320"><rect x="45" y="10" width="50" height="80" rx="4" fill="#5dade2" stroke="#2e86c1" stroke-width="2"/><text x="110" y="55" fill="#2e86c1" font-size="10" font-weight="bold">צווארי</text><rect x="43" y="95" width="54" height="75" rx="4" fill="#f5b041" stroke="#d68910" stroke-width="2"/><text x="110" y="135" fill="#d68910" font-size="10" font-weight="bold">חזי</text><rect x="40" y="175" width="60" height="70" rx="5" fill="#58d68d" stroke="#28b463" stroke-width="2"/><text x="110" y="215" fill="#28b463" font-size="10" font-weight="bold">מותני</text><path d="M45 250L95 250L90 290L50 290Z" fill="#ec7063" stroke="#cb4335" stroke-width="2"/><text x="110" y="275" fill="#cb4335" font-size="10" font-weight="bold">עצה</text></svg>`,
+boneStr:`<svg viewBox="0 0 380 170"><ellipse cx="50" cy="85" rx="42" ry="60" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="50" y="150" text-anchor="middle" fill="#b7950b" font-size="10" font-weight="bold">Epiphysis</text><rect x="88" y="45" width="204" height="80" rx="5" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><ellipse cx="190" cy="85" rx="65" ry="22" fill="#e74c3c" opacity="0.5"/><text x="190" y="90" text-anchor="middle" fill="#922b21" font-size="11" font-weight="bold">Bone Marrow</text><text x="190" y="150" text-anchor="middle" fill="#b7950b" font-size="10" font-weight="bold">Diaphysis</text><ellipse cx="330" cy="85" rx="42" ry="60" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="330" y="150" text-anchor="middle" fill="#b7950b" font-size="10" font-weight="bold">Epiphysis</text></svg>`,
+pelvis:`<svg viewBox="0 0 280 200"><path d="M35 55Q15 95,35 140L65 160L95 170L140 175L185 170L215 160L245 140Q265 95,245 55L205 35Q140 20,75 35Z" fill="#fef9e7" stroke="#d4ac0d" stroke-width="4"/><ellipse cx="140" cy="130" rx="42" ry="32" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><circle cx="75" cy="150" r="22" fill="none" stroke="#e74c3c" stroke-width="4"/><circle cx="205" cy="150" r="22" fill="none" stroke="#e74c3c" stroke-width="4"/><text x="140" y="195" text-anchor="middle" fill="#7d6608" font-size="13" font-weight="bold">Pelvis - אגן</text></svg>`,
+kneeJoint:`<svg viewBox="0 0 260 300"><rect x="90" y="10" width="80" height="80" rx="10" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="130" y="55" text-anchor="middle" fill="#b7950b" font-size="12" font-weight="bold">Femur</text><ellipse cx="130" cy="125" rx="26" ry="22" fill="#fdebd0" stroke="#f39c12" stroke-width="3"/><text x="180" y="130" fill="#f39c12" font-size="10" font-weight="bold">Patella</text><ellipse cx="100" cy="165" rx="24" ry="9" fill="#48c9b0" stroke="#17a589" stroke-width="2"/><ellipse cx="160" cy="165" rx="24" ry="9" fill="#48c9b0" stroke="#17a589" stroke-width="2"/><text x="45" y="168" fill="#17a589" font-size="9" font-weight="bold">Meniscus</text><line x1="110" y1="130" x2="150" y2="190" stroke="#e74c3c" stroke-width="5"/><line x1="150" y1="130" x2="110" y2="190" stroke="#c0392b" stroke-width="5"/><rect x="85" y="200" width="90" height="70" rx="8" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="130" y="245" text-anchor="middle" fill="#b7950b" font-size="12" font-weight="bold">Tibia</text></svg>`,
+shoulderJoint:`<svg viewBox="0 0 280 220"><path d="M70 45Q140 30,210 45" fill="none" stroke="#fef9e7" stroke-width="14" stroke-linecap="round"/><text x="140" y="28" text-anchor="middle" fill="#b7950b" font-size="10" font-weight="bold">Clavicle</text><path d="M45 65Q25 110,55 165L100 185L105 95Z" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="55" y="135" fill="#b7950b" font-size="9" font-weight="bold">Scapula</text><circle cx="140" cy="110" r="38" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><ellipse cx="140" cy="110" rx="52" ry="48" fill="none" stroke="#27ae60" stroke-width="3" stroke-dasharray="8,4"/><rect x="120" y="148" width="40" height="60" rx="8" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="140" y="185" text-anchor="middle" fill="#b7950b" font-size="10" font-weight="bold">Humerus</text></svg>`,
+armMuscles:`<svg viewBox="0 0 200 300"><ellipse cx="100" cy="38" rx="52" ry="32" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><ellipse cx="85" cy="125" rx="35" ry="52" fill="#e74c3c" stroke="#922b21" stroke-width="3"/><text x="85" y="120" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Biceps</text><text x="85" y="135" text-anchor="middle" fill="white" font-size="9">דו-ראשי</text><ellipse cx="125" cy="135" rx="23" ry="45" fill="#9b59b6" stroke="#7d3c98" stroke-width="2" opacity="0.8"/><text x="160" y="140" fill="#7d3c98" font-size="9" font-weight="bold">Triceps</text><ellipse cx="95" cy="190" rx="28" ry="32" fill="#e67e22" stroke="#d35400" stroke-width="2"/><text x="95" y="195" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Brachialis</text><rect x="75" y="230" width="18" height="55" rx="4" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><rect x="105" y="230" width="14" height="55" rx="3" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/></svg>`,
+quadriceps:`<svg viewBox="0 0 200 280"><ellipse cx="100" cy="32" rx="60" ry="28" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="100" y="37" text-anchor="middle" fill="#b7950b" font-size="10">אגן</text><ellipse cx="50" cy="120" rx="28" ry="70" fill="#e74c3c" stroke="#922b21" stroke-width="2"/><ellipse cx="85" cy="130" rx="25" ry="75" fill="#ec7063" stroke="#c0392b" stroke-width="2"/><ellipse cx="115" cy="130" rx="22" ry="70" fill="#f1948a" stroke="#e74c3c" stroke-width="2"/><ellipse cx="145" cy="125" rx="26" ry="65" fill="#e74c3c" stroke="#922b21" stroke-width="2"/><text x="100" y="130" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Quadriceps</text><text x="100" y="145" text-anchor="middle" fill="white" font-size="8">4 ראשים</text><ellipse cx="100" cy="240" rx="23" ry="18" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="100" y="245" text-anchor="middle" fill="#b7950b" font-size="8">Patella</text></svg>`,
+absMuscles:`<svg viewBox="0 0 240 240"><ellipse cx="120" cy="120" rx="100" ry="105" fill="#fdebd0" stroke="#f39c12" stroke-width="3"/><rect x="92" y="25" width="56" height="175" rx="8" fill="#e74c3c" stroke="#922b21" stroke-width="3"/><line x1="92" y1="60" x2="148" y2="60" stroke="#fadbd8" stroke-width="3"/><line x1="92" y1="95" x2="148" y2="95" stroke="#fadbd8" stroke-width="3"/><line x1="92" y1="130" x2="148" y2="130" stroke="#fadbd8" stroke-width="3"/><line x1="92" y1="165" x2="148" y2="165" stroke="#fadbd8" stroke-width="3"/><line x1="120" y1="25" x2="120" y2="200" stroke="#fadbd8" stroke-width="2"/><text x="120" y="120" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Rectus</text><path d="M25 50L92 80L92 160L15 125Z" fill="#3498db" stroke="#2980b9" stroke-width="2" opacity="0.85"/><path d="M215 50L148 80L148 160L225 125Z" fill="#3498db" stroke="#2980b9" stroke-width="2" opacity="0.85"/></svg>`,
+backMuscles:`<svg viewBox="0 0 260 260"><ellipse cx="130" cy="25" rx="23" ry="20" fill="#fdebd0" stroke="#f39c12" stroke-width="2"/><path d="M82 42L130 32L178 42L188 90L163 85L130 75L97 85L72 90Z" fill="#e74c3c" stroke="#922b21" stroke-width="2"/><text x="130" y="68" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Trapezius</text><ellipse cx="58" cy="70" rx="26" ry="32" fill="#27ae60" stroke="#1e8449" stroke-width="2"/><ellipse cx="202" cy="70" rx="26" ry="32" fill="#27ae60" stroke="#1e8449" stroke-width="2"/><text x="58" y="75" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Deltoid</text><path d="M68 95L48 180L92 220L130 230L168 220L212 180L192 95L165 100L130 105L95 100Z" fill="#3498db" stroke="#2980b9" stroke-width="2"/><text x="130" y="160" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Latissimus</text><text x="130" y="175" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Dorsi</text></svg>`,
+calfMuscles:`<svg viewBox="0 0 170 260"><ellipse cx="85" cy="28" rx="42" ry="23" fill="#fef9e7" stroke="#d4ac0d" stroke-width="3"/><text x="85" y="33" text-anchor="middle" fill="#b7950b" font-size="9">ברך</text><ellipse cx="60" cy="95" rx="32" ry="50" fill="#e74c3c" stroke="#922b21" stroke-width="3"/><ellipse cx="110" cy="95" rx="32" ry="50" fill="#e74c3c" stroke="#922b21" stroke-width="3"/><text x="85" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Gastrocnemius</text><ellipse cx="85" cy="145" rx="38" ry="38" fill="#9b59b6" stroke="#7d3c98" stroke-width="2" opacity="0.8"/><text x="85" y="150" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Soleus</text><path d="M70 165Q85 200,85 220" stroke="#c0392b" stroke-width="10" fill="none"/><path d="M100 165Q85 200,85 220" stroke="#c0392b" stroke-width="10" fill="none"/><rect x="70" y="218" width="30" height="28" fill="#fef9e7" stroke="#d4ac0d" stroke-width="2"/><text x="125" y="210" fill="#922b21" font-size="9" font-weight="bold">Achilles</text></svg>`,
+movements:`<svg viewBox="0 0 350 180"><g transform="translate(60,90)"><circle cx="0" cy="-45" r="14" fill="#fdebd0" stroke="#f39c12" stroke-width="2"/><line x1="0" y1="-31" x2="0" y2="15" stroke="#f39c12" stroke-width="4"/><line x1="0" y1="-18" x2="12" y2="-50" stroke="#e74c3c" stroke-width="5"/><path d="M18 -35 A 22 22 0 0 1 18 -55" fill="none" stroke="#27ae60" stroke-width="3"/><text x="0" y="55" text-anchor="middle" fill="#27ae60" font-size="10" font-weight="bold">Flexion</text><text x="0" y="70" text-anchor="middle" fill="#27ae60" font-size="8">כפיפה</text></g><g transform="translate(150,90)"><circle cx="0" cy="-45" r="14" fill="#fdebd0" stroke="#f39c12" stroke-width="2"/><line x1="0" y1="-31" x2="0" y2="15" stroke="#f39c12" stroke-width="4"/><line x1="0" y1="-18" x2="12" y2="5" stroke="#e74c3c" stroke-width="5"/><path d="M18 0 A 22 22 0 0 0 18 18" fill="none" stroke="#e74c3c" stroke-width="3"/><text x="0" y="55" text-anchor="middle" fill="#e74c3c" font-size="10" font-weight="bold">Extension</text><text x="0" y="70" text-anchor="middle" fill="#e74c3c" font-size="8">יישור</text></g><g transform="translate(250,90)"><circle cx="0" cy="-45" r="14" fill="#fdebd0" stroke="#f39c12" stroke-width="2"/><line x1="0" y1="-31" x2="0" y2="15" stroke="#f39c12" stroke-width="4"/><line x1="0" y1="-18" x2="-30" y2="-45" stroke="#e74c3c" stroke-width="5"/><line x1="0" y1="-18" x2="30" y2="-45" stroke="#e74c3c" stroke-width="5"/><text x="0" y="55" text-anchor="middle" fill="#3498db" font-size="10" font-weight="bold">Abduction</text><text x="0" y="70" text-anchor="middle" fill="#3498db" font-size="8">הרחקה</text></g></svg>`,
+bodySystems:`<svg viewBox="0 0 320 150"><g transform="translate(25,15)"><rect x="0" y="0" width="45" height="65" rx="5" fill="#fff8e1" stroke="#ffa000" stroke-width="2"/><circle cx="22" cy="12" r="8" fill="#ffecb3"/><line x1="22" y1="20" x2="22" y2="42" stroke="#ffa000" stroke-width="2"/><line x1="10" y1="28" x2="34" y2="28" stroke="#ffa000" stroke-width="2"/><text x="22" y="78" text-anchor="middle" fill="#e65100" font-size="8">שלד</text></g><g transform="translate(80,15)"><rect x="0" y="0" width="45" height="65" rx="5" fill="#ffebee" stroke="#e53935" stroke-width="2"/><rect x="12" y="18" width="8" height="35" fill="#ef9a9a"/><rect x="25" y="18" width="8" height="35" fill="#ef9a9a"/><text x="22" y="78" text-anchor="middle" fill="#c62828" font-size="8">שרירים</text></g><g transform="translate(135,15)"><rect x="0" y="0" width="45" height="65" rx="5" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/><circle cx="22" cy="25" r="10" fill="#ef5350"/><line x1="22" y1="35" x2="22" y2="55" stroke="#1976d2" stroke-width="2"/><text x="22" y="78" text-anchor="middle" fill="#0d47a1" font-size="8">לב ודם</text></g><g transform="translate(190,15)"><rect x="0" y="0" width="45" height="65" rx="5" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/><circle cx="14" cy="28" r="8" fill="#81c784"/><circle cx="30" cy="28" r="8" fill="#81c784"/><text x="22" y="78" text-anchor="middle" fill="#2e7d32" font-size="8">נשימה</text></g><g transform="translate(245,15)"><rect x="0" y="0" width="45" height="65" rx="5" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/><ellipse cx="22" cy="18" rx="7" ry="9" fill="#ffcc80"/><ellipse cx="22" cy="38" rx="10" ry="7" fill="#ffb74d"/><text x="22" y="78" text-anchor="middle" fill="#e65100" font-size="8">עיכול</text></g><text x="160" y="115" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">מערכות הגוף</text></svg>`
+};
+
+// === שאלות טקסט ===
+var TQ={
+1:[
+{q:"מה תפקיד המיטוכונדריה?",o:["חלבונים","ייצור ATP","DNA","עיכול"],c:1,e:"Mitochondria מייצרת ATP - האנרגיה של התא"},
+{q:"מי מייצר חלבונים בתא?",o:["Mitochondria","Ribosome","Lysosome","Golgi"],c:1,e:"Ribosome אחראי על סינתזת חלבונים"},
+{q:"מה נמצא ב-Nucleus?",o:["ATP","RNA","DNA","חלבונים"],c:2,e:"Nucleus מכיל את ה-DNA של התא"},
+{q:"מהו Apoptosis?",o:["חלוקה","מוות תאי מתוכנן","אנרגיה","חלבונים"],c:1,e:"Apoptosis הוא מוות תאי מתוכנן"},
+{q:"מה תפקיד הליזוזום?",o:["ייצור ATP","עיכול תאי","שכפול DNA","חלבונים"],c:1,e:"Lysosome אחראי על עיכול ופירוק"},
+{q:"מהו Catabolism?",o:["בניה","פירוק אנרגיה","הפרשה","קליטה"],c:1,e:"Catabolism הוא פירוק חומרים ליצירת אנרגיה"},
+{q:"מהו Anabolism?",o:["פירוק","בנייה","הפרשה","קליטה"],c:1,e:"Anabolism הוא בניית חומרים"},
+{q:"מה הוא Anatomy?",o:["תפקוד הגוף","מבנה איברים","מחלות","תאים"],c:1,e:"Anatomy הוא חקר מבנה הגוף"}
+],
+2:[
+{q:"מהי רקמת ציפוי?",o:["Muscle","Epithelial","Nervous","Connective"],c:1,e:"Epithelial tissue היא רקמת ציפוי"},
+{q:"מהי רקמת תנועה?",o:["Epithelial","Nervous","Muscle","Connective"],c:2,e:"Muscle tissue אחראית על תנועה"},
+{q:"מהו Fibroblast?",o:["תא דם","תא רקמת חיבור","תא עצב","תא שריר"],c:1,e:"Fibroblast בונה רקמת חיבור"},
+{q:"מה מאפיין Collagen?",o:["גמיש","חזק ולא נמתח","שריר","הורמון"],c:1,e:"Collagen הוא סיב חזק"},
+{q:"מה מאפיין Elastin?",o:["חזק","גמיש ונמתח","עצם","דם"],c:1,e:"Elastin הוא סיב גמיש"},
+{q:"כמה סוגי רקמות בסיסיות יש?",o:["2","3","4","5"],c:2,e:"יש 4 סוגי רקמות"},
+{q:"איזו רקמה מעבירה מידע?",o:["אפיתל","חיבור","שריר","עצב"],c:3,e:"רקמת עצב מעבירה אותות"},
+{q:"מהו Osteocyte?",o:["תא שריר","תא עצם בוגר","תא עצב","תא דם"],c:1,e:"Osteocyte הוא תא עצם בוגר"}
+],
+3:[
+{q:"כמה עצמות יש בגוף הבוגר?",o:["106","206","306","406"],c:1,e:"בגוף הבוגר יש 206 עצמות"},
+{q:"מי בונה עצם חדשה?",o:["Osteoclast","Osteoblast","Osteocyte","Chondrocyte"],c:1,e:"Osteoblast בונה עצם חדשה"},
+{q:"מי מפרק עצם ישנה?",o:["Osteoblast","Osteoclast","Osteocyte","Fibroblast"],c:1,e:"Osteoclast מפרק עצם"},
+{q:"מהי Epiphysis?",o:["גוף העצם","קצה העצם","קרום העצם","מח העצם"],c:1,e:"Epiphysis היא קצה העצם"},
+{q:"מהי Diaphysis?",o:["גוף העצם","קצה העצם","קרום העצם","מח העצם"],c:0,e:"Diaphysis היא גוף העצם"},
+{q:"כמה חוליות יש בעמוד השדרה?",o:["23","33","43","53"],c:1,e:"יש 33 חוליות בעמוד השדרה"},
+{q:"כמה חוליות צוואריות יש?",o:["5","7","9","12"],c:1,e:"יש 7 חוליות צוואריות"},
+{q:"מה שם עצם הירך?",o:["Tibia","Fibula","Femur","Humerus"],c:2,e:"Femur היא עצם הירך"}
+],
+4:[
+{q:"מהו Tendon (גיד)?",o:["עצם-עצם","שריר-עצם","סחוס","עצב"],c:1,e:"Tendon מחבר שריר לעצם"},
+{q:"מהו Ligament (רצועה)?",o:["שריר-עצם","עצם-עצם","שריר","דם"],c:1,e:"Ligament מחברת עצם לעצם"},
+{q:"מהו מפרק Hinge?",o:["כדורי","ציר","גלילי","אוכף"],c:1,e:"Hinge joint הוא מפרק ציר"},
+{q:"מהו מפרק Ball & Socket?",o:["ציר","כדורי","גלילי","קבוע"],c:1,e:"Ball and socket הוא מפרק כדורי"},
+{q:"מה תפקיד המניסקוס?",o:["חיבור","בולם זעזועים","נוזל","שרירים"],c:1,e:"המניסקוס בולם זעזועים"},
+{q:"איזה מפרק נמצא בכתף?",o:["Hinge","Ball & Socket","Pivot","Gliding"],c:1,e:"בכתף יש מפרק כדורי"},
+{q:"מה שם הרצועה הקדמית בברך?",o:["PCL","MCL","ACL","LCL"],c:2,e:"ACL - Anterior Cruciate Ligament"},
+{q:"מהו Synovial fluid?",o:["דם","נוזל שימון","מח עצם","לימפה"],c:1,e:"Synovial fluid משמן את המפרק"}
+],
+5:[
+{q:"מי מכופף את המרפק?",o:["Triceps","Biceps","Deltoid","Pectoralis"],c:1,e:"Biceps כופף מרפק"},
+{q:"מי מיישר את המרפק?",o:["Biceps","Triceps","Deltoid","Pectoralis"],c:1,e:"Triceps מיישר מרפק"},
+{q:"היכן נמצא Gluteus?",o:["ירך קדמית","עכוז","שוק","בטן"],c:1,e:"Gluteus הוא שריר העכוז"},
+{q:"כמה ראשים ל-Quadriceps?",o:["4 ראשים","3","2","5"],c:0,e:"Quadriceps בעל 4 ראשים"},
+{q:"היכן נמצא Latissimus Dorsi?",o:["חזה","גב","בטן","כתף"],c:1,e:"Latissimus Dorsi בגב"},
+{q:"מה שם שריר השוק?",o:["Soleus","Gastrocnemius","Tibialis","Peroneus"],c:1,e:"Gastrocnemius שריר השוק"},
+{q:"מהו כיווץ Isometric?",o:["תנועה","התארכות","סטטי ללא תנועה","מהיר"],c:2,e:"Isometric הוא כיווץ סטטי"},
+{q:"מהו Origin של שריר?",o:["דיסטלי","פרוקסימלי","מרכז","סוף"],c:1,e:"Origin הוא נקודה פרוקסימלית"}
+],
+6:[
+{q:"מהו Medial?",o:["קרוב לאמצע","רחוק","קדמי","אחורי"],c:0,e:"Medial - קרוב לקו האמצע"},
+{q:"מהו Lateral?",o:["קרוב","רחוק מהאמצע","עליון","תחתון"],c:1,e:"Lateral - רחוק מקו האמצע"},
+{q:"מהו Flexion?",o:["יישור","כפיפה","סיבוב","הרחקה"],c:1,e:"Flexion הוא כפיפה"},
+{q:"מהו Extension?",o:["כפיפה","יישור","סיבוב","קירוב"],c:1,e:"Extension הוא יישור"},
+{q:"מהו Abduction?",o:["קירוב","הרחקה מהגוף","כפיפה","יישור"],c:1,e:"Abduction הוא הרחקה"},
+{q:"מהו Adduction?",o:["הרחקה","קירוב לגוף","כפיפה","סיבוב"],c:1,e:"Adduction הוא קירוב"},
+{q:"מהו Proximal?",o:["רחוק","קרוב לגוף","קדמי","אחורי"],c:1,e:"Proximal - קרוב למרכז"},
+{q:"מהו Distal?",o:["קרוב","רחוק מהגוף","עליון","תחתון"],c:1,e:"Distal - רחוק ממרכז"}
+]
+};
+
+// === שאלות תמונה ===
+var IQ={
+1:[
+{q:"מה מוצג בתמונה?",img:"cell",o:["תא צמח","תא בעל חיים","חיידק","וירוס"],c:1,e:"תא בעל חיים עם גרעין ומיטוכונדריות",isImg:true},
+{q:"זהה את האברון האדום:",img:"mito",o:["ריבוזום","מיטוכונדריה","ליזוזום","גרעין"],c:1,e:"מיטוכונדריה מייצרת ATP",isImg:true}
+],
+2:[
+{q:"כמה סוגי רקמות מוצגים?",img:"tissues",o:["2","3","4","5"],c:2,e:"4 רקמות: אפיתל, שריר, חיבור, עצב",isImg:true},
+{q:"מהי הרקמה בעלת הפסים?",img:"tissues",o:["Connective","Muscle","Epithelial","Nervous"],c:1,e:"רקמת שריר מאופיינת בפסים",isImg:true}
+],
+3:[
+{q:"זהה את מבנה השלד:",img:"skeleton",o:["חלקי","מלא","עמוד שדרה","אגן"],c:1,e:"שלד מלא של גוף האדם",isImg:true},
+{q:"מהו החלק הכחול?",img:"spine",o:["צווארי","חזי","מותני","עצה"],c:0,e:"חוליות צוואריות בכחול",isImg:true},
+{q:"איזה חלק מכיל מח עצם?",img:"boneStr",o:["Epiphysis","Diaphysis","קרום","סחוס"],c:1,e:"מח העצם בדיאפיזה",isImg:true},
+{q:"מה המבנה המוצג?",img:"pelvis",o:["כתף","אגן","חזה","גולגולת"],c:1,e:"אגן (Pelvis)",isImg:true}
+],
+4:[
+{q:"מהו סוג המפרק?",img:"shoulderJoint",o:["ציר","כדורי","אוכף","מישורי"],c:1,e:"מפרק כתף כדורי",isImg:true},
+{q:"זהה את המבנה הירוק:",img:"kneeJoint",o:["רצועה","מניסקוס","סחוס","גיד"],c:1,e:"מניסקוס בולם זעזועים",isImg:true}
+],
+5:[
+{q:"זהה את השריר האדום:",img:"armMuscles",o:["Triceps","Biceps","Deltoid","Brachialis"],c:1,e:"Biceps כופף מרפק",isImg:true},
+{q:"כמה ראשים לשריר?",img:"quadriceps",o:["2","3","4","5"],c:2,e:"Quadriceps - 4 ראשים",isImg:true},
+{q:"זהה את השרירים:",img:"absMuscles",o:["גב","בטן","חזה","ירך"],c:1,e:"שרירי הבטן",isImg:true},
+{q:"מהו השריר הכחול?",img:"backMuscles",o:["Trapezius","Latissimus Dorsi","Deltoid","Rhomboid"],c:1,e:"Latissimus Dorsi",isImg:true},
+{q:"מהו השריר המוצג?",img:"calfMuscles",o:["Soleus","Gastrocnemius","Tibialis","Peroneus"],c:1,e:"Gastrocnemius",isImg:true}
+],
+6:[
+{q:"איזו תנועה בירוק?",img:"movements",o:["Extension","Flexion","Rotation","Abduction"],c:1,e:"Flexion - כפיפה",isImg:true},
+{q:"זהה את מערכות הגוף:",img:"bodySystems",o:["2 מערכות","3 מערכות","5 מערכות","7 מערכות"],c:2,e:"מוצגות 5 מערכות גוף",isImg:true}
+]
+};
+
+// === מילון ===
+var DICT=[
+{t:"Anatomy",h:"אנטומיה",d:"חקר מבנה הגוף"},
+{t:"Cell",h:"תא",d:"יחידת החיים הבסיסית"},
+{t:"Nucleus",h:"גרעין",d:"מכיל DNA"},
+{t:"Mitochondria",h:"מיטוכונדריה",d:"מייצרת ATP"},
+{t:"Ribosome",h:"ריבוזום",d:"מייצר חלבונים"},
+{t:"Epithelial",h:"אפיתל",d:"רקמת ציפוי"},
+{t:"Muscle",h:"שריר",d:"רקמת תנועה"},
+{t:"Nervous",h:"עצב",d:"רקמת מידע"},
+{t:"Connective",h:"חיבור",d:"רקמת תמיכה"},
+{t:"Femur",h:"פמור",d:"עצם הירך"},
+{t:"Tibia",h:"טיביה",d:"עצם השוק"},
+{t:"Humerus",h:"הומרוס",d:"עצם הזרוע"},
+{t:"Pelvis",h:"אגן",d:"חגורת האגן"},
+{t:"Tendon",h:"גיד",d:"שריר-עצם"},
+{t:"Ligament",h:"רצועה",d:"עצם-עצם"},
+{t:"Biceps",h:"דו-ראשי",d:"כופף מרפק"},
+{t:"Triceps",h:"תלת-ראשי",d:"מיישר מרפק"},
+{t:"Quadriceps",h:"ארבע-ראשי",d:"מיישר ברך"},
+{t:"Flexion",h:"כפיפה",d:"הקטנת זווית"},
+{t:"Extension",h:"יישור",d:"הגדלת זווית"},
+{t:"Abduction",h:"הרחקה",d:"ריחוק מהגוף"},
+{t:"Adduction",h:"קירוב",d:"קירוב לגוף"},
+{t:"Medial",h:"מדיאלי",d:"קרוב לאמצע"},
+{t:"Lateral",h:"לטרלי",d:"רחוק מאמצע"}
+];
+
+// === משתנים ===
+var G={mode:'normal',lvl:1,qi:0,score:0,lives:3,streak:0,qs:[],timer:null,time:30,exam:false,examAns:{},examRes:null,answered:false};
+
+// === עזר ===
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function shuffleQ(q){var ca=q.o[q.c];var so=shuffle(q.o.slice());return{q:q.q,o:so,c:so.indexOf(ca),e:q.e,img:q.img,isImg:q.isImg};}
+function getQs(l){return (TQ[l]||[]).concat(IQ[l]||[]);}
+
+function showScreen(id){
+    var screens=document.querySelectorAll('.screen');
+    for(var i=0;i<screens.length;i++){screens[i].classList.remove('active');}
+    document.getElementById(id).classList.add('active');
+}
+function goHome(){if(G.timer)clearInterval(G.timer);showScreen('home');}
+function openLevels(){showScreen('levels');}
+
+// === משחק ===
+function playGame(mode){
+    G.mode=mode;G.lvl=1;G.qi=0;G.score=0;G.lives=3;G.streak=0;G.exam=false;
+    var all=getQs(1);G.qs=shuffle(all).slice(0,10).map(shuffleQ);
+    showScreen('game');
+    document.getElementById('gTimer').classList.add('hide');
+    updateUI();showQ();
+    if(mode==='timed')startTimer();
+}
+function playLevel(l){
+    G.mode='normal';G.lvl=l;G.qi=0;G.score=0;G.lives=3;G.streak=0;G.exam=false;
+    var all=getQs(l);G.qs=shuffle(all).slice(0,10).map(shuffleQ);
+    showScreen('game');
+    document.getElementById('gTimer').classList.add('hide');
+    updateUI();showQ();
+}
+function playExam(){
+    G.exam=true;G.qi=0;G.score=0;G.examAns={};
+    var all=[];for(var i=1;i<=6;i++)all=all.concat(getQs(i));
+    G.qs=shuffle(all).slice(0,30).map(shuffleQ);
+    showScreen('game');
+    document.getElementById('gTimer').classList.add('hide');
+    updateUI();showQ();
+}
+function startTimer(){
+    G.time=30;
+    document.getElementById('gTimer').classList.remove('hide');
+    document.getElementById('gTimer').textContent='30';
+    if(G.timer)clearInterval(G.timer);
+    G.timer=setInterval(function(){
+        G.time--;
+        document.getElementById('gTimer').textContent=G.time;
+        if(G.time<=0){clearInterval(G.timer);if(!G.answered)selectAns(-1);}
+    },1000);
+}
+function showQ(){
+    var q=G.qs[G.qi];
+    document.getElementById('gQ').textContent=q.q;
+    var badge=document.getElementById('gBadge'),imgBox=document.getElementById('gImg');
+    if(q.isImg&&q.img&&SVG[q.img]){badge.classList.remove('hide');imgBox.classList.remove('hide');imgBox.innerHTML=SVG[q.img];}
+    else{badge.classList.add('hide');imgBox.classList.add('hide');}
+    var ansDiv=document.getElementById('gAns');ansDiv.innerHTML='';
+    for(var i=0;i<q.o.length;i++){
+        var btn=document.createElement('button');
+        btn.className='ans';
+        btn.textContent=q.o[i];
+        btn.setAttribute('data-idx',i);
+        btn.onclick=function(){selectAns(parseInt(this.getAttribute('data-idx')));};
+        ansDiv.appendChild(btn);
+    }
+    document.getElementById('gExpl').classList.add('hide');
+    document.getElementById('gNext').classList.add('hide');
+    G.answered=false;
+}
+function selectAns(idx){
+    if(G.answered)return;G.answered=true;
+    var q=G.qs[G.qi];
+    if(G.timer)clearInterval(G.timer);
+    if(G.exam){
+        G.examAns[G.qi]=idx;
+        var btns=document.querySelectorAll('#gAns .ans');
+        for(var i=0;i<btns.length;i++){
+            btns[i].style.pointerEvents='none';
+            if(i===q.c)btns[i].classList.add('ok');
+            else if(i===idx&&idx!==q.c)btns[i].classList.add('no');
+        }
+        setTimeout(function(){
+            if(G.qi<29){G.qi++;G.answered=false;updateUI();showQ();}
+            else endExam();
+        },1200);
+        return;
+    }
+    var ok=idx===q.c;
+    if(ok){G.score++;G.streak++;}else{G.streak=0;if(G.mode!=='study')G.lives--;}
+    var btns=document.querySelectorAll('#gAns .ans');
+    for(var i=0;i<btns.length;i++){
+        btns[i].style.pointerEvents='none';
+        if(i===q.c)btns[i].classList.add('ok');
+        else if(i===idx&&!ok)btns[i].classList.add('no');
+    }
+    if(G.mode==='study'||!ok){
+        document.getElementById('gExpl').innerHTML='<strong>'+(ok?'✅ נכון!':'❌ שגוי!')+'</strong><br>💡 '+q.e;
+        document.getElementById('gExpl').classList.remove('hide');
+    }
+    updateUI();
+    if(G.mode==='study'){document.getElementById('gNext').classList.remove('hide');}
+    else if(G.lives>0){setTimeout(nextQ,1500);}
+    else{setTimeout(endGame,1500);}
+}
+function nextQ(){
+    G.qi++;
+    if(G.qi>=10){
+        if(G.lvl>=6){endGame();return;}
+        G.lvl++;G.qi=0;
+        var all=getQs(G.lvl);G.qs=shuffle(all).slice(0,10).map(shuffleQ);
+        if(G.mode!=='study')G.lives=3;
+        G.score=0;
+    }
+    updateUI();showQ();
+    if(G.mode==='timed')startTimer();
+}
+function updateUI(){
+    document.getElementById('gLvl').textContent=G.exam?'מבחן':G.lvl;
+    document.getElementById('gStreak').textContent=G.streak;
+    if(G.exam){
+        document.getElementById('gNum').textContent=G.qi+1;
+        document.getElementById('gLives').textContent='📝 '+(G.qi+1)+'/30';
+        document.getElementById('gProg').style.width=((G.qi+1)/30*100)+'%';
+    }else{
+        document.getElementById('gNum').textContent=G.qi+1;
+        document.getElementById('gLives').textContent='❤️'.repeat(G.lives)+'🖤'.repeat(3-G.lives);
+        document.getElementById('gProg').style.width=((G.qi+1)/10*100)+'%';
+    }
+}
+function endExam(){
+    var correct=0,res=[];
+    for(var i=0;i<G.qs.length;i++){
+        var q=G.qs[i],ua=G.examAns[i],ok=ua===q.c;
+        if(ok)correct++;
+        res.push({n:i+1,q:q.q,ua:ua!==undefined?q.o[ua]:'לא נענה',ca:q.o[q.c],ok:ok,e:q.e});
+    }
+    var pct=Math.round(correct/30*100);
+    G.examRes={pct:pct,correct:correct,res:res};
+    document.getElementById('rEmoji').textContent=pct>=90?'🏆':pct>=70?'🎉':pct>=55?'✅':'📚';
+    document.getElementById('rTitle').textContent=pct>=90?'מעולה!':pct>=70?'טוב מאוד!':pct>=55?'עברת!':'להמשיך להתאמן';
+    document.getElementById('rScore').textContent=pct+'%';
+    document.getElementById('rInfo').innerHTML='<div style="display:flex;justify-content:center;gap:20px"><div style="background:#d4edda;padding:15px;border-radius:10px"><div style="font-size:2em;color:#28a745">'+correct+'</div>נכונות</div><div style="background:#f8d7da;padding:15px;border-radius:10px"><div style="font-size:2em;color:#dc3545">'+(30-correct)+'</div>שגויות</div></div>';
+    document.getElementById('rDetails').classList.remove('hide');
+    showScreen('results');
+}
+function endGame(){
+    document.getElementById('rEmoji').textContent=G.lives>0?'🎉':'💪';
+    document.getElementById('rTitle').textContent=G.lives>0?'כל הכבוד!':'ניסיון טוב!';
+    document.getElementById('rScore').textContent='שלב '+G.lvl;
+    document.getElementById('rInfo').innerHTML='<div>רצף מקסימלי: '+G.streak+'</div>';
+    document.getElementById('rDetails').classList.add('hide');
+    showScreen('results');
+}
+function openDetails(){
+    if(!G.examRes)return;
+    var h='<div style="background:#667eea;color:white;padding:12px;border-radius:10px;margin-bottom:12px;text-align:center"><b>תוצאות: '+G.examRes.pct+'%</b></div>';
+    var wrong=G.examRes.res.filter(function(r){return !r.ok;});
+    if(wrong.length>0){
+        h+='<h3 style="color:#dc3545">❌ שגויות ('+wrong.length+')</h3>';
+        for(var i=0;i<wrong.length;i++){
+            var r=wrong[i];
+            h+='<div class="dict" style="border-color:#f8d7da"><b>שאלה '+r.n+':</b> '+r.q+'<br><span style="color:#dc3545">שלך: '+r.ua+'</span><br><span style="color:#28a745">נכון: '+r.ca+'</span><br><em>💡 '+r.e+'</em></div>';
+        }
+    }
+    document.getElementById('detailsList').innerHTML=h;
+    showScreen('details');
+}
+
+// === לוח תוצאות ===
+function openLB(){
+    var lb=JSON.parse(localStorage.getItem('anatLB')||'[]');
+    var h='';
+    if(lb.length===0){h='<div style="text-align:center;padding:20px">אין תוצאות עדיין</div>';}
+    else{
+        for(var i=0;i<Math.min(lb.length,10);i++){
+            var u=lb[i],m=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+            h+='<div class="stats" style="margin:8px 0"><span>'+m+' '+u.name+'</span><span>'+u.pts+' ⭐</span></div>';
+        }
+    }
+    document.getElementById('lbList').innerHTML=h;
+    showScreen('lb');
+}
+
+// === מילון ===
+function openDict(){displayDict(DICT);showScreen('dict');}
+function displayDict(terms){
+    var h='';
+    for(var i=0;i<terms.length;i++){
+        var t=terms[i];
+        h+='<div class="dict"><span style="font-size:1.1em;font-weight:bold;color:#667eea">'+t.t+'</span> <span style="color:#764ba2">('+t.h+')</span><div style="color:#555;margin-top:4px">'+t.d+'</div></div>';
+    }
+    document.getElementById('dictList').innerHTML=h;
+}
+function filterDict(){
+    var v=document.getElementById('dictSearch').value.toLowerCase();
+    if(!v){displayDict(DICT);return;}
+    var f=DICT.filter(function(t){return t.t.toLowerCase().indexOf(v)>=0||t.h.indexOf(v)>=0||t.d.indexOf(v)>=0;});
+    displayDict(f);
+}
+
+// === Service Worker Registration ===
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
